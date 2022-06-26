@@ -1,1 +1,214 @@
+ 
+PROJECT ON BACK END WEBDEVELOPMENT
+REGISTRATION AND LOGIN PAGE
+ 
 
+
+
+      Created By- Vishnukant SHUKLA 
+			Coarse – B.tech 
+			Department – Computer Science 
+			Year – 1st Year
+			College name – GLA UNIVERSITY
+
+    
+    
+    Files Name with Codes 
+
+
+
+1- server.js
+
+
+
+if (process.env.NODE_ENV != "production") {
+  require("dotenv").config();
+}
+const express = require("express");
+const app = express();
+const bcrypt = require("bcrypt");
+const passport = require("passport");
+const flash = require("express-flash");
+const session = require("express-session");
+
+const initializepassport = require("./passport-config");
+initializepassport(
+  passport,
+  (email) => users.find((user) => user.email === email),
+  (id) => users.find((user) => user.id === id)
+);
+
+const users = [];
+
+app.set("view-engine", "ejs");
+app.use(express.urlencoded({ extended: false }));
+app.use(flash());
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false
+  })
+);
+app.use(passport.initialize());
+
+app.get("/", checkAuthenticated, (req, res) => {
+  res.render("index.ejs", { name: "chandu" });
+});
+app.get("/Login", (req, res) => {
+  res.render("Login.ejs");
+});
+app.post(
+  "/Login",
+  passport.authenticate("local", {
+    successRedirect: "/",
+    failureRedirect: "/Login",
+    failureFlash: true
+  })
+);
+
+app.get("/Register", (req, res) => {
+  res.render("Register.ejs");
+});
+app.post("/Register", async (req, res) => {
+  try {
+    const hashedpassword = await bcrypt.hash(req.body.password, 10);
+    users.push({
+      id: Date.now().toString(),
+      name: req.body.name,
+      email: req.body.email,
+      password: hashedpassword
+    });
+    res.redirect("/Login");
+  } catch {
+    res.redirect("/Register");
+  }
+});
+function checkAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.redirect("/Login");
+}
+
+app.listen(3000);
+
+
+
+
+2 -Login.ejs
+
+<h1>Login</h1>
+<% if(messages.error) {%>
+  <%= messages.error %>
+  <% } %>
+<form action="/Login" method="post">
+  <div>
+    <label for="email">Email</label>
+    <input type="email" name="email" id="email" required>
+  </div>
+  <div>
+    <label for="password">Password</label>
+    <input type="password" name="password" id="password" required>
+  </div>
+  <button type="submit">Login</button>
+
+</form>
+<a href="/Register">Register</a>
+3- Register.ejs
+<h1>Register</h1>
+<form action="/Register" method="post">
+  <div>
+    <label for="name">Name</label>
+    <input type="text" name="name" id="name" required>
+  </div>
+  <div>
+    <label for="email">Email</label>
+    <input type="email" name="email" id="email" required>
+  </div>
+  <div>
+    <label for="password">Password</label>
+    <input type="password" name="password" id="password" required>
+  </div>
+  <button type="submit">Register</button>
+
+</form>
+<a href="/Login">Login</a>
+
+4- Index.ejs
+
+<h1>hello world<%= name %></h1>
+
+5- .env
+SESSION_SECRET =secret
+Steps to run
+1.)	Login sandbox with your mail.
+2.)	Fork the sandbox(“imp**”).
+3.)	Type mkdir project(“Create file project”).
+4.)	Click on Terminal and the click on “+” sign.
+5.)	Type cd project (“Change directory to project”).
+6.)	Then type  pwd (“Check working directory”).
+7.)	Then Type-
+8.)	 first  command –
+•	npm install express 
+=>	Press Enter .
+
+ second command –
+•	npm install ejs
+=>	Press Enter 
+
+third command -
+•	npm install   -g  - -force nodemon 
+=>	Press Enter 
+
+fourth command –
+•	npm install dotenv
+=>	 Press Enter 
+
+Fifth command –
+•	npm install passport 
+=>	Press Enter .
+Sixth command –
+•	npm install passport-local.
+=>	Press Enter.
+	    Seven command –
+•	 npm  install env
+=>	Press Enter.
+	    Eight command-
+•	npm install express-flash 
+=>	Press Enter.
+	   Ninth command –
+•	npm install express-session
+=>	Press Enter 
+Tenth command –
+•	npm install bcrypt
+=>	Press Enter.
+9.)	Go to project create all the files-    
+server.js,  views(index.ejs,register.ejs,login.ejs,)
+ ,env), passport-config.js.
+10.)	Now in the passport-config.js copy the code from the given link “https://drive.google.com/file/d/15gs6...”.
+11.)	Then copy the  code in server.js which is given  in above file .
+12.)	After that copy the code in Login.ejs which is also given in above file
+13.)	After that copy the code in .env file which is given above the file .
+14.)	After that copy the code in Registration.ejs file .
+15.)	After that copy the code in index.ejs  file which is given above the file .
+16.)	Type nodemonserver.js
+17.)	Open browser 3000 panel.
+
+
+
+
+
+
+
+
+
+
+=>	Points To Remember when you are suppose to start  the project.
+•	All the command should be in lower case.
+•	The quotes which is placed in bracket should not include in the code as well as in commands .
+•	In the 9th points the “views” is the folder inside the project folder.
+•	In the views folder creates the files such as  Login.ejs , Register.ejs ,index.ejs.
+•	It is important to folk the sand box before starting the code .
+•	The green colour statements are the command which you have to use in Terminal.
+•	After Enter each command press Enter so that the package will install.
